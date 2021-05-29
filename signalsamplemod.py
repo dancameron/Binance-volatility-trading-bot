@@ -12,11 +12,11 @@ MY_EXCHANGE = 'BINANCE'
 MY_SCREENER = 'CRYPTO'
 MY_FIRST_INTERVAL = Interval.INTERVAL_1_MINUTE
 MY_SECOND_INTERVAL = Interval.INTERVAL_5_MINUTES
-TA_BUY_THRESHOLD = 18 # How many of the 26 indicators to indicate a buy
+TA_BUY_THRESHOLD = 13 # How many of the 26 indicators to indicate a buy
 PAIR_WITH = 'USDT'
 TICKERS = 'signalsample.txt'
 TIME_TO_WAIT = 4 # Minutes to wait between analysis
-FULL_LOG = False # List anylysis result to console
+FULL_LOG = True # List anylysis result to console
 
 def analyze(pairs):
     taMax = 0
@@ -44,9 +44,9 @@ def analyze(pairs):
             interval=MY_SECOND_INTERVAL,
             timeout= 10
         )
-    
+
     for pair in pairs:
-       
+
         try:
             first_analysis = first_handler[pair].get_analysis()
             second_analysis = second_handler[pair].get_analysis()
@@ -58,7 +58,7 @@ def analyze(pairs):
                     print (f'First handler: {first_handler[pair]}')
                     print (f'Second handler: {second_handler[pair]}')
                     tacheckS = 0
-                
+
         first_tacheck = first_analysis.summary['BUY']
         second_tacheck = second_analysis.summary['BUY']
         if FULL_LOG:
@@ -74,7 +74,7 @@ def analyze(pairs):
                 print(f'Signalsample: Signal detected on {pair}')
                 with open('signals/signalsample.exs','a+') as f:
                     f.write(pair + '\n')
-    print(f'Signalsample: Max signal by {taMaxCoin} at {taMax} on shortest timeframe') 
+    print(f'Signalsample: Max signal by {taMaxCoin} at {taMax} on shortest timeframe')
 
     return signal_coins
 
@@ -84,8 +84,8 @@ def do_work():
 
     pairs=[line.strip() for line in open(TICKERS)]
     for line in open(TICKERS):
-        pairs=[line.strip() + PAIR_WITH for line in open(TICKERS)] 
-    
+        pairs=[line.strip() + PAIR_WITH for line in open(TICKERS)]
+
     while True:
         print(f'Signalsample: Analyzing {len(pairs)} coins')
         signal_coins = analyze(pairs)
